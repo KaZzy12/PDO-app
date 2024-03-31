@@ -12,7 +12,7 @@ const events:Event[] = [
   {
     id: 2,
     name: 'Anniversaire Loïc',
-    date: '2023-19-10',
+    date: '2023-10-19',
     type: 'anniversaire',
     image: require('../../assets/images/birthday.png'),
   },

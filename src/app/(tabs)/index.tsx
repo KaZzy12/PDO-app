@@ -12,46 +12,43 @@ const eventSorted = events.sort((a,b) => {return new Date(a.date).getTime() - ne
 export default function TabOneScreen() {
   return (
     <View>
-      {/*<FlatList
-        data={events}
-        renderItem={({ item }) => <EventListItem event={item}/>}
-      />
-      <FlatList
-        data={events.sort((a,b) =>
-          {return new Date(a.date).getTime() - new Date(b.date).getTime();})}
-        renderItem={({ item }) => <EventListItem event={item}/>}
-      />
       <SectionList
-        sections={setEventGroupedByMonth(events)}
-        keyExtractor={(item, index) => item + index}
-        renderItem={({ item }) => <EventListItem event={item.data}/>}
-      />*/}
-    
-      <FlatList
-        data={getEventGroupedByMonth(events)}
-        renderItem={({ item }) => <EventListItem event={item.data}/>}
+        sections={getEventGroupedByMonth(events)}
+        renderItem={({ item }) => <EventListItem event={item}/>}
+        renderSectionHeader={({ section:item }) => <Text>{item.month}</Text>}
       />
     </View>
   );
 }
 
 function getEventGroupedByMonth(event: Event[]) {
-  const holding: {data: Event, month: string, eventDate: string}[] = [];
+  const holding: {data: Event[], month: string, eventDate: string}[] = [];
   for(var eventEntry in events) {
     const eventObj = events[eventEntry];
     const month = getMonth(eventObj.date);
-
-    holding.push({
-      data: {
-        id: eventObj.id,
-        name: eventObj.name,
-        date: eventObj.date,
-        type: eventObj.type,
-        image: eventObj.image,
-      },
-      month,
-      eventDate: eventObj.date,
-    });
+    const exists = holding.findIndex(element => element.month === month);
+    if(exists == -1) {
+      holding.push({
+        data: [{
+          id: eventObj.id,
+          name: eventObj.name,
+          date: getDay(eventObj.date),
+          type: eventObj.type,
+          image: eventObj.image,
+        }],
+        month,
+        eventDate: eventObj.date,
+      });
+    }
+    else {
+      holding.at(exists)?.data.push({
+          id: eventObj.id,
+          name: eventObj.name,
+          date: getDay(eventObj.date),
+          type: eventObj.type,
+          image: eventObj.image,
+      });
+    }
   }
   holding.sort((a, b) => (a.eventDate < b.eventDate ? -1 : 1));
   //const groupNames = Array.from(new Set(holding.map(k => k.month)));
@@ -61,4 +58,8 @@ function getEventGroupedByMonth(event: Event[]) {
 function getMonth(sDate:string) {
   let date = new Date(sDate);
   return date.toLocaleString('default', {month: 'long'});
+}
+function getDay(sDate:string) {
+  let date = new Date(sDate);
+  return date.toLocaleString('default', {day: '2-digit'});
 }
