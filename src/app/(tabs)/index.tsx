@@ -26,7 +26,8 @@ function getEventGroupedByMonth(event: Event[]) {
   for(var eventEntry in events) {
     const eventObj = events[eventEntry];
     const month = getMonth(eventObj.date);
-    const exists = holding.findIndex(element => element.month === month);
+    const year = getYear(eventObj.date)
+    const exists = holding.findIndex(element => element.month === month && getYear(element.eventDate) === year);
     if(exists == -1) {
       holding.push({
         data: [{
@@ -62,4 +63,8 @@ function getMonth(sDate:string) {
 function getDay(sDate:string) {
   let date = new Date(sDate);
   return date.toLocaleString('default', {day: '2-digit'});
+}
+function getYear(sDate:string) {
+  let date = new Date(sDate);
+  return date.toLocaleString('default', {year: 'numeric'});
 }
