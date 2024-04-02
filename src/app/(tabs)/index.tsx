@@ -1,8 +1,9 @@
 import { View, Text } from '@/src/components/Themed';
 import events from '@/assets/data/events';
 import EventListItem from '@/src/components/EventListItem';
-import { FlatList, SectionList } from 'react-native';
+import { SectionList } from 'react-native';
 import { Event } from '@/src/types';
+import Month from '@/src/components/Month';
 type EventListItemProps = {
   event: Event;
 };
@@ -15,7 +16,7 @@ export default function TabOneScreen() {
       <SectionList
         sections={getEventGroupedByMonth(events)}
         renderItem={({ item }) => <EventListItem event={item}/>}
-        renderSectionHeader={({ section:item }) => <Text>{item.month}</Text>}
+        renderSectionHeader={({ section:item }) => <Month month={item.month}/>}
       />
     </View>
   );

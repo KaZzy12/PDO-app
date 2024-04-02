@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	tabCenter: {
-		flex: 5,
+		flex: 10,
 		padding: 12,
 	},
   title: {
