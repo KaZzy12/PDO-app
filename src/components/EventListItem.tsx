@@ -10,7 +10,7 @@ type EventListItemProps = {
 
 const EventListItem = ({event}: EventListItemProps) => {
   return(
-    <Link href={`/${event.id}`} asChild>
+    <Link href={`/events/${event.id}`} asChild>
       <Pressable style={styles.container}>
         <View  style={styles.tab}>
           <Text style={styles.date}>{event.date}</Text>
