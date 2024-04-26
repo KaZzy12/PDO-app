@@ -37,6 +37,7 @@ function getEventGroupedByMonth(event: Event[]) {
           date: getDay(eventObj.date),
           type: eventObj.type,
           image: eventObj.image,
+          participants: eventObj.participants,
         }],
         month,
         eventDate: eventObj.date,
@@ -49,6 +50,7 @@ function getEventGroupedByMonth(event: Event[]) {
           date: getDay(eventObj.date),
           type: eventObj.type,
           image: eventObj.image,
+          participants: eventObj.participants,
       });
     }
   }

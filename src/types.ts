@@ -6,4 +6,5 @@ export type Event = {
     date: string,
     type: string,
     image: ImageSourcePropType | undefined,
+    participants: string[],
 };
