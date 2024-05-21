@@ -22,7 +22,7 @@ const EventDetailsScreen = () => {
     const isParticiping = (event.participants.indexOf("Loic") > -1);
     const [refreshList, setRefreshList] = useState(isParticiping);
     return(
-        <View>
+        <View style={styles.parent}>
             <Stack.Screen options={{ title: event.name}} />
             <Image style={styles.image} source={event.image} />
             <Text style={styles.date}>Date : {event.date}</Text>         
@@ -37,14 +37,17 @@ const EventDetailsScreen = () => {
               </>
             )}
             <View style={styles.buttons}>
-            <Button onPress={() => {addToParticipants(event); setRefreshList(true)}} title="Je participe" disabled={refreshList}/>
-            <Button onPress={() => {remofreFromParticipants(event); setRefreshList(false)}} title="Je participe plus" disabled={!refreshList}/>
+                <Button onPress={() => {addToParticipants(event); setRefreshList(true)}} title="Je participe" disabled={refreshList}/>
+                <Button onPress={() => {remofreFromParticipants(event); setRefreshList(false)}} title="Je participe plus" disabled={!refreshList}/>
             </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    parent: {
+        flexGrow: 1,
+    },
     image: {
         height: 200,
         display: 'flex',
