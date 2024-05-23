@@ -34,12 +34,13 @@ const EventDetailsScreen = () => {
                     renderItem={({ item }) => <Text style={styles.list}>{`\u2022 ${item}`}</Text>}
                     extraData={refreshList} 
                 />
+                <View style={styles.buttons}>
+                    <Button onPress={() => {addToParticipants(event); setRefreshList(true)}} title="Je participe" disabled={refreshList}/>
+                    <Button onPress={() => {remofreFromParticipants(event); setRefreshList(false)}} title="Je participe plus" disabled={!refreshList}/>
+                </View>
               </>
             )}
-            <View style={styles.buttons}>
-                <Button onPress={() => {addToParticipants(event); setRefreshList(true)}} title="Je participe" disabled={refreshList}/>
-                <Button onPress={() => {remofreFromParticipants(event); setRefreshList(false)}} title="Je participe plus" disabled={!refreshList}/>
-            </View>
+            
         </View>
     );
 };
@@ -69,6 +70,7 @@ const styles = StyleSheet.create({
     buttons: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        marginHorizontal: 10,
     },
 });
 
