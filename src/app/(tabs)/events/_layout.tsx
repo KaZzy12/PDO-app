@@ -15,7 +15,7 @@ export default function MenuStack() {
               options={{
                 title: 'Events',
                 headerRight: () => (
-                    <Link href="/modal" asChild>
+                    <Link href="/events/create" asChild>
                       <Pressable>
                         {({ pressed }) => (
                           <FontAwesome
