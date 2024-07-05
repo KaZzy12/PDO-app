@@ -3,6 +3,8 @@ import { StyleSheet, TextInput } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from "react";
 import moment from "moment";
+import eventTypes from "@/assets/data/eventsTypes";
+import Dropdown from "@/src/components/Dropdown";
 
 const CreateEventScreen = () => {
     const [date, setDate] = useState(new Date());
@@ -16,10 +18,14 @@ const CreateEventScreen = () => {
         if(typeof(currentDate) !== 'undefined')
             setDate(currentDate);
     };
+    const [type, setType] = useState(String);
     return (
         <View style={styles.container}>
             <Text style={styles.label}>Nom</Text>
             <TextInput placeholder="Nom" style={styles.input}/>
+            
+            <Text style={styles.label}>Type</Text>
+            <Dropdown options={eventTypes} onChangeText={setType}/>
 
             <Text style={styles.label}>Date</Text>
             <TextInput 
@@ -35,8 +41,6 @@ const CreateEventScreen = () => {
                 onChange={onChange}
             />
             )}
-            <Text style={styles.label}>Type</Text>
-            <TextInput placeholder="Type" style={styles.input}/>
         </View>
     );
 };
