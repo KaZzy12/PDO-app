@@ -3,7 +3,7 @@ import { StyleSheet, TextInput } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from "react";
 import moment from "moment";
-import eventTypes from "@/assets/data/eventsTypes";
+import eventTypes from "@/src/constants/eventsTypes";
 import Dropdown from "@/src/components/Dropdown";
 
 const CreateEventScreen = () => {
