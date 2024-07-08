@@ -17,6 +17,10 @@ const eventTypes:Item[] = [
         label: 'Triathlon',
         value: 'triathlon',
     },
+    {
+        label: 'VTT',
+        value: 'vtt',
+    },
 ];
 
 export default eventTypes;
