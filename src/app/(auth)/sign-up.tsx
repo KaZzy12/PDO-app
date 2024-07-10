@@ -1,17 +1,19 @@
 import { View, Text } from "@/src/components/Themed";
-import { Button, StyleSheet, TextInput } from "react-native";
+import { Alert, Button, StyleSheet, TextInput } from "react-native";
 import { Link, Stack } from "expo-router";
 import { useState } from "react";
 import Colors from "@/src/constants/Colors";
+import { supabase } from "@/src/lib/supabase";
 
 const SignUpScreen = () => {
-    const [userName, setUserName] = useState(String);
+    const [email, setEmail] = useState(String);
     const [password, setPassword] = useState(String);
     const [errors, setErrors] = useState(String);
+    const [loading, setLoading] = useState(false);
     const validateInput = () => {
         setErrors('');
-        if(!userName) {
-            setErrors('Nom d\'utilisateur obligatoire')
+        if(!email) {
+            setErrors('Email obligatoire')
             return false;
         }
         if(!password) {
@@ -20,20 +22,28 @@ const SignUpScreen = () => {
         }
         return true;
     };
-    const signup = () => {
+    async function signup() {
+        setLoading(true);
         if(!validateInput())
             return;
+        const { error } = await supabase.auth.signUp({
+            email,
+            password,
+        });
+        if(error) Alert.alert(error.message);
+        setLoading(false);
     };
     return(
         <View style={styles.container}>
             <Stack.Screen options={{ title: 'Créer un compte' }} />
-            <Text style={styles.label}>Nom d'utilisateur</Text>
+            <Text style={styles.label}>Email</Text>
             <TextInput 
-                placeholder="Nom d'utilisateur" 
+                placeholder="athlete@PDO.com" 
                 style={styles.input} 
-                value={userName}
-                onChangeText={setUserName}
+                value={email}
+                onChangeText={setEmail}
             />
+            <Text style={styles.label}>Mot de passe</Text>
             <TextInput 
                 placeholder="Mot de passe" 
                 style={styles.input} 
@@ -42,7 +52,11 @@ const SignUpScreen = () => {
                 secureTextEntry={true}
             />
             <Text style={{ color: 'red' }}>{errors}</Text>
-            <Button onPress={signup} title="Créer un compte" />
+            <Button 
+                onPress={signup} 
+                disabled={loading} 
+                title={loading? "Création du compte..." : "Créer un compte"}
+            />
             <Link href="/login" style={styles.textButton}>
                 Se connecter
             </Link>
