@@ -1,6 +1,5 @@
 import { StyleSheet, Image, Pressable } from 'react-native';
 import { Text, View } from '@/src/components/Themed';
-import Colors from '@/src/constants/Colors';
 import { Event } from '../types';
 import { Link } from 'expo-router';
 
@@ -13,9 +12,10 @@ const EventListItem = ({event}: EventListItemProps) => {
     <Link href={`/events/${event.id}`} asChild>
       <Pressable style={styles.container}>
         <View  style={styles.tab}>
+          <Text style={styles.dayName}>{event.dayName}</Text>
           <Text style={styles.date}>{event.date}</Text>
         </View>
-        <View style={styles.tabCenter}>  
+        <View style={styles.tabCenter}>
           <Text style={styles.title}>{event.name}</Text>
         </View>
       </Pressable>
@@ -71,6 +71,10 @@ const styles = StyleSheet.create({
   date: {
     color: "white",
 		fontSize: 18,
+  },
+  dayName: {
+    color: "white",
+		fontSize: 14,
   },
   image: {
     height: 200,

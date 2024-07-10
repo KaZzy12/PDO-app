@@ -17,6 +17,7 @@ export default function TabOneScreen() {
         sections={getEventGroupedByMonth(events)}
         renderItem={({ item }) => <EventListItem event={item}/>}
         renderSectionHeader={({ section:item }) => <Month month={item.month}/>}
+        stickySectionHeadersEnabled= {true}
       />
     </View>
   );
@@ -35,6 +36,7 @@ function getEventGroupedByMonth(event: Event[]) {
           id: eventObj.id,
           name: eventObj.name,
           date: getDay(eventObj.date),
+          dayName: getDayName(eventObj.date),
           type: eventObj.type,
           image: eventObj.image,
           participants: eventObj.participants,
@@ -48,6 +50,7 @@ function getEventGroupedByMonth(event: Event[]) {
           id: eventObj.id,
           name: eventObj.name,
           date: getDay(eventObj.date),
+          dayName: getDayName(eventObj.date),
           type: eventObj.type,
           image: eventObj.image,
           participants: eventObj.participants,
@@ -66,6 +69,10 @@ function getMonth(sDate:string) {
 function getDay(sDate:string) {
   let date = new Date(sDate);
   return date.toLocaleString('default', {day: '2-digit'});
+}
+function getDayName(sDate:string) {
+  let date = new Date(sDate);
+  return date.toLocaleString('fr-BE', {weekday: 'short', timeZone: "UTC"}).toUpperCase();
 }
 function getYear(sDate:string) {
   let date = new Date(sDate);
