@@ -1,6 +1,6 @@
 import { View, Text } from "@/src/components/Themed";
 import { Alert, Button, StyleSheet, TextInput } from "react-native";
-import { Link, Stack } from "expo-router";
+import { Link, Redirect, Stack } from "expo-router";
 import { useState } from "react";
 import Colors from "@/src/constants/Colors";
 import { supabase } from "@/src/lib/supabase";
@@ -10,6 +10,7 @@ const SignUpScreen = () => {
     const [password, setPassword] = useState(String);
     const [errors, setErrors] = useState(String);
     const [loading, setLoading] = useState(false);
+    const [fullname, setFullname] = useState(String);
     const validateInput = () => {
         setErrors('');
         if(!email) {
@@ -29,6 +30,11 @@ const SignUpScreen = () => {
         const { error } = await supabase.auth.signUp({
             email,
             password,
+            options: {
+                data: {
+                    full_name: fullname,
+                }
+            }
         });
         if(error) Alert.alert(error.message);
         setLoading(false);
@@ -36,6 +42,13 @@ const SignUpScreen = () => {
     return(
         <View style={styles.container}>
             <Stack.Screen options={{ title: 'Créer un compte' }} />
+            <Text style={styles.label}>Nom complet</Text>
+            <TextInput 
+                placeholder="Nom complet" 
+                style={styles.input} 
+                value={fullname}
+                onChangeText={setFullname}
+            />
             <Text style={styles.label}>Email</Text>
             <TextInput 
                 placeholder="athlete@PDO.com" 

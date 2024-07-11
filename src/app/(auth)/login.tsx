@@ -1,7 +1,7 @@
 import { View, Text } from "@/src/components/Themed";
 import { useState } from "react";
 import { Alert, Button, StyleSheet, TextInput } from "react-native";
-import { Link, Stack } from "expo-router";
+import { Link, Redirect, Stack } from "expo-router";
 import Colors from "@/src/constants/Colors";
 import { supabase } from "@/src/lib/supabase";
 

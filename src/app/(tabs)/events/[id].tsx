@@ -5,21 +5,23 @@ import events from "@/assets/data/events";
 import Colors from '@/src/constants/Colors';
 import { Event } from "@/src/types";
 import { useState } from "react";
+import { useAuth } from "@/src/providers/AuthProvider";
 
-const addToParticipants = (event: Event) => {
-    event.participants.push("Loic");
+const addToParticipants = (event: Event, profile:any) => {
+    event.participants.push(profile.full_name);
 }
-const remofreFromParticipants = (event: Event) => {
-    const index = event.participants.indexOf("Loic");
+const removeFromParticipants = (event: Event, profile:any) => {
+    const index = event.participants.indexOf(profile.full_name);
     event.participants.splice(index);
 }
 
 const EventDetailsScreen = () => {
+    const { profile } = useAuth();
     const { id } = useLocalSearchParams();
     const event = events.find((e) => e.id.toString() === id)
     if (!event)
         return <Text>Event not found</Text>
-    const isParticiping = (event.participants.indexOf("Loic") > -1);
+    const isParticiping = (event.participants.indexOf(profile.fullname) > -1);
     const [refreshList, setRefreshList] = useState(isParticiping);
     return(
         <View style={styles.parent}>
@@ -35,8 +37,8 @@ const EventDetailsScreen = () => {
                     extraData={refreshList} 
                 />
                 <View style={styles.buttons}>
-                    <Button onPress={() => {addToParticipants(event); setRefreshList(true)}} title="Je participe" disabled={refreshList}/>
-                    <Button onPress={() => {remofreFromParticipants(event); setRefreshList(false)}} title="Je participe plus" disabled={!refreshList}/>
+                    <Button onPress={() => {addToParticipants(event, profile); setRefreshList(true)}} title="Je participe" disabled={refreshList}/>
+                    <Button onPress={() => {removeFromParticipants(event, profile); setRefreshList(false)}} title="Je participe plus" disabled={!refreshList}/>
                 </View>
               </>
             )}

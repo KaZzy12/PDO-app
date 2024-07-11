@@ -9,3 +9,9 @@ export type Event = {
     image: ImageSourcePropType | undefined,
     participants: string[],
 };
+
+export type Profile = {
+    full_name: string,
+    id: string,
+    updated_at: string | null,
+}
