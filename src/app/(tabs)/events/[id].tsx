@@ -21,7 +21,9 @@ const EventDetailsScreen = () => {
     const event = events.find((e) => e.id.toString() === id)
     if (!event)
         return <Text>Event not found</Text>
-    const isParticiping = (event.participants.indexOf(profile.fullname) > -1);
+    if(!profile)
+        return <Text>Issue with profile</Text>
+    const isParticiping = (event.participants.indexOf(profile.full_name) > -1);
     const [refreshList, setRefreshList] = useState(isParticiping);
     return(
         <View style={styles.parent}>

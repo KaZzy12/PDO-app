@@ -29,7 +29,17 @@ export default function AuthProvider({children}: PropsWithChildren) {
                     .select('*')
                     .eq('id', session.user.id)
                     .single();
-                setProfile(data || null);
+                if(data) {
+                    const profile = {
+                        full_name: data.full_name,
+                        id: data.id,
+                        updated_at: data.updated_at,
+                    };
+                    setProfile(profile);
+                }
+                else {
+                    setProfile(null);
+                }
             }
             setLoading(false);
         };
