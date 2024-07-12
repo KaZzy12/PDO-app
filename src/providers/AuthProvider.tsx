@@ -20,9 +20,7 @@ export default function AuthProvider({children}: PropsWithChildren) {
     const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
-        const fetchSession = async() => {
-            const { data: { session } } = await supabase.auth.getSession();
-            setSession(session);    
+        const fetchProfile = async(session: Session | null) => {
             if(session) {
                 const { data } = await supabase
                     .from('profiles')
@@ -41,11 +39,17 @@ export default function AuthProvider({children}: PropsWithChildren) {
                     setProfile(null);
                 }
             }
+        }
+        const fetchSession = async() => {
+            const { data: { session } } = await supabase.auth.getSession();
+            setSession(session);    
+            fetchProfile(session);
             setLoading(false);
         };
         fetchSession();
         supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
+            fetchProfile(session);
         });
     }, []);
     return (
