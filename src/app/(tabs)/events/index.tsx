@@ -1,16 +1,24 @@
 import { View, Text } from '@/src/components/Themed';
-import events from '@/assets/data/events';
 import EventListItem from '@/src/components/EventListItem';
-import { SectionList } from 'react-native';
+import { ActivityIndicator, SectionList } from 'react-native';
 import { Event } from '@/src/types';
 import Month from '@/src/components/Month';
+import { useEventsList } from '@/src/api/events';
+
 type EventListItemProps = {
   event: Event;
 };
 
-const eventSorted = events.sort((a,b) => {return new Date(a.date).getTime() - new Date(b.date).getTime();});
+export default function EventsScreen() {
+  const { data: events, error, isLoading } = useEventsList();
 
-export default function TabOneScreen() {
+  if(isLoading) {
+    return <ActivityIndicator />
+  }
+  if(error) {
+    return <Text>Erreur lors de la récupération des events</Text>
+  }
+
   return (
     <View>
       <SectionList
@@ -23,7 +31,8 @@ export default function TabOneScreen() {
   );
 }
 
-function getEventGroupedByMonth(event: Event[]) {
+function getEventGroupedByMonth(events: any) {
+  const eventSorted = events.sort((a: any,b:any) => {return new Date(a.date).getTime() - new Date(b.date).getTime();});
   const holding: {data: Event[], month: string, eventDate: string}[] = [];
   for(var eventEntry in events) {
     const eventObj = events[eventEntry];

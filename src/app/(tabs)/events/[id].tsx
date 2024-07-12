@@ -1,42 +1,54 @@
 import { Stack, useLocalSearchParams } from "expo-router";
 import { View, Text } from "../../../components/Themed";
-import { StyleSheet, Image, FlatList, Button } from "react-native";
-import events from "@/assets/data/events";
+import { StyleSheet, Image, FlatList, Button, ActivityIndicator } from "react-native";
 import Colors from '@/src/constants/Colors';
 import { Event } from "@/src/types";
 import { useState } from "react";
 import { useAuth } from "@/src/providers/AuthProvider";
-
-const addToParticipants = (event: Event, profile:any) => {
-    event.participants.push(profile.full_name);
-}
-const removeFromParticipants = (event: Event, profile:any) => {
-    const index = event.participants.indexOf(profile.full_name);
-    event.participants.splice(index);
-}
+import { useEvent, useEventAttendees } from "@/src/api/events";
 
 const EventDetailsScreen = () => {
+    const [refreshList, setRefreshList] = useState(false);
     const { profile } = useAuth();
-    const { id } = useLocalSearchParams();
-    const event = events.find((e) => e.id.toString() === id)
-    if (!event)
-        return <Text>Event not found</Text>
     if(!profile)
         return <Text>Issue with profile</Text>
-    const isParticiping = (event.participants.indexOf(profile.full_name) > -1);
-    const [refreshList, setRefreshList] = useState(isParticiping);
+    const { id: idString } = useLocalSearchParams();
+    const id = parseFloat(typeof idString === 'string'? idString : idString[0]);
+    const { data: event, error: eventError, isLoading: isLoadingEvent } = useEvent(id);
+    const { data: participants, error: eventAttendeeError, isLoading: isLoadingEventAttendee } = useEventAttendees(id);
+    if(isLoadingEvent || isLoadingEventAttendee) {
+        return <ActivityIndicator />
+    }
+    if(eventError || eventAttendeeError) {
+        return <Text>Erreur lors de la récupération des events</Text>
+    }
+    if (!event)
+        return <Text>Event not found</Text>
+    const isParticiping = (participants.indexOf(profile.id) > -1);
+    if(isParticiping) {
+        setRefreshList(isParticiping);
+    }
+    
+    const addToParticipants = (event: Event, profile:any) => {
+        //participants.push(profile.full_name);
+    }
+    const removeFromParticipants = (event: Event, profile:any) => {
+        const index = event.participants.indexOf(profile.full_name);
+        //participants.splice(index);
+    }
+
     return(
         <View style={styles.parent}>
             <Stack.Screen options={{ title: event.name}} />
             <Image style={styles.image} source={event.image} />
             <Text style={styles.date}>Date : {event.date}</Text>         
-            {event.participants.length > 0 && (
+            {participants.length > 0 && (
               <>
                 <Text style={styles.text}>Participants :</Text>
                 <FlatList
-                    data={event.participants}
-                    renderItem={({ item }) => <Text style={styles.list}>{`\u2022 ${item}`}</Text>}
-                    extraData={refreshList} 
+                    data={participants}
+                    renderItem={({ item }) => <Text style={styles.list}>{`\u2022 ${item.profiles.full_name}`}</Text>}
+                    extraData={refreshList}
                 />
                 <View style={styles.buttons}>
                     <Button onPress={() => {addToParticipants(event, profile); setRefreshList(true)}} title="Je participe" disabled={refreshList}/>
