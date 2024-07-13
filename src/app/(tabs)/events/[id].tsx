@@ -3,38 +3,39 @@ import { View, Text } from "../../../components/Themed";
 import { StyleSheet, Image, FlatList, Button, ActivityIndicator } from "react-native";
 import Colors from '@/src/constants/Colors';
 import { Event } from "@/src/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/src/providers/AuthProvider";
 import { useEvent, useEventAttendees } from "@/src/api/events";
 
 const EventDetailsScreen = () => {
-    const [refreshList, setRefreshList] = useState(false);
     const { profile } = useAuth();
-    if(!profile)
-        return <Text>Issue with profile</Text>
+    const [isParticipating, setIsParticipating] = useState(false);
     const { id: idString } = useLocalSearchParams();
     const id = parseFloat(typeof idString === 'string'? idString : idString[0]);
     const { data: event, error: eventError, isLoading: isLoadingEvent } = useEvent(id);
-    const { data: participants, error: eventAttendeeError, isLoading: isLoadingEventAttendee } = useEventAttendees(id);
+    const { data: participants, error: eventAttendeeError, isLoading: isLoadingEventAttendee } = useEventAttendees(id); 
+    useEffect(() => {
+        if(participants && profile) {
+            const isParticiping = participants.findIndex(x => x.profiles.id === profile.id) !== -1;
+            setIsParticipating(isParticiping);
+        }
+    }, [participants, profile]); 
     if(isLoadingEvent || isLoadingEventAttendee) {
         return <ActivityIndicator />
     }
+    if(!profile)
+        return <Text>Issue with profile</Text> 
     if(eventError || eventAttendeeError) {
         return <Text>Erreur lors de la récupération des events</Text>
     }
     if (!event)
         return <Text>Event not found</Text>
-    const isParticiping = (participants.indexOf(profile.id) > -1);
-    if(isParticiping) {
-        setRefreshList(isParticiping);
-    }
     
     const addToParticipants = (event: Event, profile:any) => {
-        //participants.push(profile.full_name);
+        setIsParticipating(true);
     }
     const removeFromParticipants = (event: Event, profile:any) => {
-        const index = event.participants.indexOf(profile.full_name);
-        //participants.splice(index);
+        setIsParticipating(false);
     }
 
     return(
@@ -42,21 +43,20 @@ const EventDetailsScreen = () => {
             <Stack.Screen options={{ title: event.name}} />
             <Image style={styles.image} source={event.image} />
             <Text style={styles.date}>Date : {event.date}</Text>         
-            {participants.length > 0 && (
+            {(participants.length > 0 || event.type != 'anniversaire') && (
               <>
                 <Text style={styles.text}>Participants :</Text>
                 <FlatList
                     data={participants}
                     renderItem={({ item }) => <Text style={styles.list}>{`\u2022 ${item.profiles.full_name}`}</Text>}
-                    extraData={refreshList}
-                />
+                    extraData={isParticipating}
+                />  
                 <View style={styles.buttons}>
-                    <Button onPress={() => {addToParticipants(event, profile); setRefreshList(true)}} title="Je participe" disabled={refreshList}/>
-                    <Button onPress={() => {removeFromParticipants(event, profile); setRefreshList(false)}} title="Je participe plus" disabled={!refreshList}/>
-                </View>
-              </>
-            )}
-            
+                    <Button onPress={() => {addToParticipants(event, profile)}} title="Je participe" disabled={isParticipating}/>
+                    <Button onPress={() => {removeFromParticipants(event, profile)}} title="Je participe plus" disabled={!isParticipating}/>
+                </View>             
+              </>             
+            )}           
         </View>
     );
 };
