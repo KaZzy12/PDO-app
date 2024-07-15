@@ -5,15 +5,19 @@ import Colors from '@/src/constants/Colors';
 import { Event } from "@/src/types";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/src/providers/AuthProvider";
-import { useEvent, useEventAttendees } from "@/src/api/events";
+import { useEvent } from "@/src/api/events";
+import { useDeleteAttendee, useEventAttendees, useInsertAttendee } from "@/src/api/eventsAttendees";
 
 const EventDetailsScreen = () => {
     const { profile } = useAuth();
     const [isParticipating, setIsParticipating] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const { id: idString } = useLocalSearchParams();
     const id = parseFloat(typeof idString === 'string'? idString : idString[0]);
     const { data: event, error: eventError, isLoading: isLoadingEvent } = useEvent(id);
     const { data: participants, error: eventAttendeeError, isLoading: isLoadingEventAttendee } = useEventAttendees(id); 
+    const { mutate: insertAttendee } = useInsertAttendee();
+    const { mutate: deleteAttendee } = useDeleteAttendee();
     useEffect(() => {
         if(participants && profile) {
             const isParticiping = participants.findIndex(x => x.profiles.id === profile.id) !== -1;
@@ -32,10 +36,17 @@ const EventDetailsScreen = () => {
         return <Text>Event not found</Text>
     
     const addToParticipants = (event: Event, profile:any) => {
+        insertAttendee({ event_id: id, attendee_id: profile.id })
         setIsParticipating(true);
     }
     const removeFromParticipants = (event: Event, profile:any) => {
+        deleteAttendee({ event_id: id, attendee_id: profile.id });
         setIsParticipating(false);
+    }
+    const onRefresh = () => {
+        setIsRefreshing(true);
+
+        setIsRefreshing(false);
     }
 
     return(

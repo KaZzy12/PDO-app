@@ -1,5 +1,5 @@
 import { supabase } from "@/src/lib/supabase";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useEventsList = () => {
     return useQuery({
@@ -31,23 +31,28 @@ export const useEvent = (id: number) => {
     });
 };
 
-export const useEventAttendees = (id: number) => {
-    return useQuery({
-        queryKey: ['eventAttendees', id],
-        queryFn: async () => {
-          const { data, error } = await supabase
-            .from('event_attendee')
-            .select(`
-              profiles (
-                id,
-                full_name
-              )
-            `)
-            .eq('event_id', id);
-          if(error) {
-            throw new Error(error.message);
-          }
-          return data;
-        },
-    });
-}
+export const useInsertEvent = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    async mutationFn(data: any) {
+      const { error, data: newEvent } = await supabase
+        .from('events')
+        .insert({
+          name: data.name,
+          date: data.date,
+          type: data.type,
+          //image: data.image,
+        })
+        .single();
+
+      if(error) {
+        throw new Error(error.message);
+      }
+      return newEvent;
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries({ queryKey: ['events']});
+    },
+  });
+};

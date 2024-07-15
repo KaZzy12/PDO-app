@@ -5,7 +5,8 @@ import { useState } from "react";
 import moment from "moment";
 import eventTypes from "@/src/constants/eventsTypes";
 import Dropdown from "@/src/components/Dropdown";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
+import { useInsertEvent } from "@/src/api/events";
 
 const CreateEventScreen = () => {
     const [date, setDate] = useState(new Date());
@@ -13,6 +14,8 @@ const CreateEventScreen = () => {
     const [name, setName] = useState(String);
     const [type, setType] = useState(String);
     const [errors, setErrors] = useState(String);
+    const { mutate: insertEvent } = useInsertEvent();
+    const router = useRouter();
     const displayDatePicker= () => {
         setShow(true);
     };
@@ -41,9 +44,12 @@ const CreateEventScreen = () => {
     const onCreate = () => {
         if(!validateInput())
             return;
-        console.warn("Creating event: ", name, " ", type, " ", date);
-
-        resetFields();
+        insertEvent({ name, date, type }, {
+            onSuccess: () => {
+                resetFields();
+                router.back();
+            }
+        });
     };
     return (
         <View style={styles.container}>
