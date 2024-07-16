@@ -1,11 +1,14 @@
 import { supabase } from "@/src/lib/supabase";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useEventsList = () => {
+export const useEventsList = (today: Date) => {
     return useQuery({
         queryKey: ['events'],
         queryFn: async () => {
-          const { data, error } = await supabase.from('events').select('*');
+          const { data, error } = await supabase
+            .from('events')
+            .select('*')
+            .or(`type.eq.anniversaire, date.gte.${ today }`);
           if(error) {
             throw new Error(error.message);
           }

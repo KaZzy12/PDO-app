@@ -10,7 +10,7 @@ type EventListItemProps = {
 };
 
 export default function EventsScreen() {
-  const { data: events, error, isLoading } = useEventsList();
+  const { data: events, error, isLoading } = useEventsList(new Date());
 
   if(isLoading) {
     return <ActivityIndicator />
@@ -36,8 +36,16 @@ function getEventGroupedByMonth(events: any) {
   const holding: {data: Event[], month: string, eventDate: string}[] = [];
   for(var eventEntry in events) {
     const eventObj = events[eventEntry];
-    const month = getMonth(eventObj.date);
-    const year = getYear(eventObj.date)
+    const month = getMonthName(eventObj.date);
+    if(eventObj.type === 'anniversaire') {
+      let date = new Date(eventObj.date);
+      date.setFullYear(new Date().getFullYear());
+      if(date < new Date()) {
+        date.setFullYear(new Date().getFullYear() + 1);
+      }
+      eventObj.date = convertToStringDate(date.toDateString());
+    }
+    const year = getYear(eventObj.date);
     const exists = holding.findIndex(element => element.month === month && getYear(element.eventDate) === year);
     if(exists == -1) {
       holding.push({
@@ -70,8 +78,11 @@ function getEventGroupedByMonth(events: any) {
   //const groupNames = Array.from(new Set(holding.map(k => k.month)));
   return holding;
 }
-
 function getMonth(sDate:string) {
+  let date = new Date(sDate);
+  return date.toLocaleString('default', {month: '2-digit'});
+}
+function getMonthName(sDate:string) {
   let date = new Date(sDate);
   return date.toLocaleString('default', {month: 'long'});
 }
@@ -86,4 +97,7 @@ function getDayName(sDate:string) {
 function getYear(sDate:string) {
   let date = new Date(sDate);
   return date.toLocaleString('default', {year: 'numeric'});
+}
+function convertToStringDate(sDate:string) {
+  return getYear(sDate) + "-" + getMonth(sDate) + "-" + getDay(sDate);
 }
