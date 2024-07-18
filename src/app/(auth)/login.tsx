@@ -4,12 +4,18 @@ import { Alert, Button, StyleSheet, TextInput, Image } from "react-native";
 import { Link, Redirect, Stack } from "expo-router";
 import Colors from "@/src/constants/Colors";
 import { supabase } from "@/src/lib/supabase";
+import { useColorScheme } from '@/src/components/useColorScheme';
 
 const LoginScreen = () => {
     const [email, setEmail] = useState(String);
     const [password, setPassword] = useState(String);
     const [errors, setErrors] = useState(String);
     const [loading, setLoading] = useState(false);
+    const colorScheme = useColorScheme();
+    const myIcon = (colorScheme === 'dark'
+        ? require("@/assets/images/icon-dark.png")
+        : require("@/assets/images/icon.png"));
+    console.log(myIcon);
     const validateInput = () => {
         setErrors('');
         if(!email) {
@@ -36,7 +42,7 @@ const LoginScreen = () => {
     return(
         <View style={styles.container}>
             <Stack.Screen options={{ title: 'Se connecter' }} />
-            <Image style={styles.image} source={require("@/assets/images/icon.png")} />
+            <Image style={styles.image} source={myIcon} />
             <View style={styles.containerInput}>
                 <Text style={styles.label}>Email</Text>
                 <TextInput 

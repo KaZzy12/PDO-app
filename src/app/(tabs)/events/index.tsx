@@ -10,13 +10,13 @@ type EventListItemProps = {
 };
 
 export default function EventsScreen() {
-  const { data: events, error, isLoading } = useEventsList(new Date());
+  const { data: events, error, isLoading } = useEventsList(new Date().toISOString());
 
   if(isLoading) {
     return <ActivityIndicator />
   }
   if(error) {
-    return <Text>Erreur lors de la récupération des events</Text>
+    return <Text>Erreur lors de la récupération des events {error.message}</Text>
   }
 
   return (
