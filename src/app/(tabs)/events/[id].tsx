@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/src/providers/AuthProvider";
 import { useEvent } from "@/src/api/events";
 import { useDeleteAttendee, useEventAttendees, useInsertAttendee } from "@/src/api/eventsAttendees";
+import RemoteImage from "@/src/components/RemoteImage";
 
 const EventDetailsScreen = () => {
     const { profile } = useAuth();
@@ -34,12 +35,11 @@ const EventDetailsScreen = () => {
     }
     if (!event)
         return <Text>Event not found</Text>
-    
-    const addToParticipants = (event: Event, profile:any) => {
+    const addToParticipants = (profile:any) => {
         insertAttendee({ event_id: id, attendee_id: profile.id })
         setIsParticipating(true);
     }
-    const removeFromParticipants = (event: Event, profile:any) => {
+    const removeFromParticipants = (profile:any) => {
         deleteAttendee({ event_id: id, attendee_id: profile.id });
         setIsParticipating(false);
     }
@@ -52,7 +52,7 @@ const EventDetailsScreen = () => {
     return(
         <View style={styles.parent}>
             <Stack.Screen options={{ title: event.name}} />
-            <Image style={styles.image} source={event.image} />
+            <RemoteImage style={styles.image} path={event.events_types.image} fallback='@/assets/images/default.png' />
             <Text style={styles.date}>Date : {event.date}</Text>         
             {(participants.length > 0 || event.type != 'anniversaire') && (
               <>
@@ -63,8 +63,8 @@ const EventDetailsScreen = () => {
                     extraData={isParticipating}
                 />  
                 <View style={styles.buttons}>
-                    <Button onPress={() => {addToParticipants(event, profile)}} title="Je participe" disabled={isParticipating}/>
-                    <Button onPress={() => {removeFromParticipants(event, profile)}} title="Je participe plus" disabled={!isParticipating}/>
+                    <Button onPress={() => {addToParticipants(profile)}} title="Je participe" disabled={isParticipating}/>
+                    <Button onPress={() => {removeFromParticipants(profile)}} title="Je participe plus" disabled={!isParticipating}/>
                 </View>             
               </>             
             )}           

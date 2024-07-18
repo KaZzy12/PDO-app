@@ -1,5 +1,5 @@
 import { View, Text } from "../../../components/Themed";
-import { Button, StyleSheet, TextInput } from "react-native";
+import { ActivityIndicator, Button, StyleSheet, TextInput } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from "react";
 import moment from "moment";
@@ -7,6 +7,7 @@ import eventTypes from "@/src/constants/eventsTypes";
 import Dropdown from "@/src/components/Dropdown";
 import { Stack, useRouter } from "expo-router";
 import { useInsertEvent } from "@/src/api/events";
+import { useEventsTypes } from "@/src/api/eventsTypes";
 
 const CreateEventScreen = () => {
     const [date, setDate] = useState(new Date());
@@ -15,6 +16,16 @@ const CreateEventScreen = () => {
     const [type, setType] = useState(String);
     const [errors, setErrors] = useState(String);
     const { mutate: insertEvent } = useInsertEvent();
+    const { data: eventTypes, error, isLoading } = useEventsTypes();
+    if(isLoading) {
+        return <ActivityIndicator />
+    }
+    if(error) {
+        return <Text>Issue with event types</Text> 
+    }
+    if(!eventTypes) {
+        return <Text>Erreur lors de la récupération des types d'évènements</Text>
+    }
     const router = useRouter();
     const displayDatePicker= () => {
         setShow(true);
@@ -48,7 +59,10 @@ const CreateEventScreen = () => {
             onSuccess: () => {
                 resetFields();
                 router.back();
-            }
+            },
+            onError(error, variables, context) {
+                setErrors(error.message);
+            },
         });
     };
     return (

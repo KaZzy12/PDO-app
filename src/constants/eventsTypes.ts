@@ -11,7 +11,7 @@ const eventTypes:Item[] = [
     },
     {
         label: 'Event PDO',
-        value: 'event PDO',
+        value: 'eventPDO',
     },
     {
         label: 'Triathlon',

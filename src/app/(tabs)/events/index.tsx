@@ -39,8 +39,11 @@ function getEventGroupedByMonth(events: any) {
     const month = getMonthName(eventObj.date);
     if(eventObj.type === 'anniversaire') {
       let date = new Date(eventObj.date);
+      date.setHours(0,0,0,0);
+      let today = new Date();
+      today.setHours(0,0,0,0);
       date.setFullYear(new Date().getFullYear());
-      if(date < new Date()) {
+      if(date < today) {
         date.setFullYear(new Date().getFullYear() + 1);
       }
       eventObj.date = convertToStringDate(date.toDateString());

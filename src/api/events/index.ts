@@ -23,7 +23,16 @@ export const useEvent = (id: number) => {
         queryFn: async () => {
           const { data, error } = await supabase
             .from('events')
-            .select('*')
+            .select(`
+              id,
+              name,
+              date,
+              type,
+              events_types ( 
+                value,
+                image
+              )
+            `)
             .eq('id', id)
             .single();
           if(error) {
@@ -45,7 +54,6 @@ export const useInsertEvent = () => {
           name: data.name,
           date: data.date,
           type: data.type,
-          //image: data.image,
         })
         .single();
 
