@@ -12,11 +12,12 @@ import { useEventsTypes } from "@/src/api/eventsTypes";
 const CreateEventScreen = () => {
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
-    const [name, setName] = useState(String);
-    const [type, setType] = useState(String);
-    const [errors, setErrors] = useState(String);
+    const [name, setName] = useState('');
+    const [type, setType] = useState('');
+    const [errors, setErrors] = useState('');
     const { mutate: insertEvent } = useInsertEvent();
     const { data: eventTypes, error, isLoading } = useEventsTypes();
+    const router = useRouter();
     if(isLoading) {
         return <ActivityIndicator />
     }
@@ -26,7 +27,7 @@ const CreateEventScreen = () => {
     if(!eventTypes) {
         return <Text>Erreur lors de la récupération des types d'évènements</Text>
     }
-    const router = useRouter();
+    
     const displayDatePicker= () => {
         setShow(true);
     };
