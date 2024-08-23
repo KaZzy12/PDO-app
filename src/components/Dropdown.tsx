@@ -1,27 +1,34 @@
-import React, { useState } from "react";
-import RNPickerSelect, { Item } from 'react-native-picker-select';
-import { View, Text } from "./Themed";
+import React, { useState } from 'react';
+import { Picker } from '@react-native-picker/picker';
+import { View, StyleSheet } from 'react-native';
+import { Event_types } from '../types';
 
-const Dropdown = ({options, onChangeText}: {options:Item[], onChangeText:Function}) => {
-    const [selectedValue, setSelectedValue] = useState(String);
-    const placeholder = {
-        label: 'Sélectionnez une valeur...',
-        value: null,
-    };
-    const handleTextChange = (text: string) => {
-        setSelectedValue(text);
-        onChangeText(text);
-    };
+const Dropdown = ({ options, onChangeText }: { options: Event_types[], onChangeText: Function }) => {
+    const [selectedValue, setSelectedValue] = useState('');
+
     return (
         <View>
-            <RNPickerSelect
-                placeholder={placeholder}
-                items={options}
-                onValueChange={(value:string) => handleTextChange(value)}
-                value={selectedValue}
-            />
+            <Picker
+                style={[styles.pickerInput]}
+                selectedValue={selectedValue}
+                onValueChange={(itemValue, itemIndex) => {
+                    setSelectedValue(itemValue);
+                    onChangeText(itemValue);
+                }}
+            >
+                {options.map(option => (
+                    <Picker.Item label={option.label} value={option.value} key={option.value} />
+                ))}
+            </Picker>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    pickerInput: {
+        backgroundColor: 'snow',
+        borderRadius: 5,
+    },
+});
 
 export default Dropdown;
