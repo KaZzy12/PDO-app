@@ -11,7 +11,7 @@ const EventListItem = ({event}: EventListItemProps) => {
   return(
     <Link href={`/events/${event.id}`} asChild>
       <Pressable style={styles.container}>
-        <View  style={styles.tab}>
+        <View  style={[styles.tab, { backgroundColor: event.typeColor }]}>
           <Text style={styles.dayName}>{event.dayName}</Text>
           <Text style={styles.date}>{event.date}</Text>
         </View>
@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
   },
   tab: {
 		flex: 2,
-		backgroundColor: "dodgerblue",
 		justifyContent: "center",
 		alignItems: "center",
 	},

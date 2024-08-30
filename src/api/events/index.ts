@@ -7,7 +7,16 @@ export const useEventsList = (today: string) => {
         queryFn: async () => {
           const { data, error } = await supabase
             .from('events')
-            .select('*')
+            .select(`
+              id,
+              name,
+              date,
+              type,
+              events_types ( 
+                value,
+                color
+              )
+            `)
             .or(`type.eq.anniversaire, date.gte.${ today }`);
           if(error) {
             throw new Error(error.message);

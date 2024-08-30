@@ -12,6 +12,7 @@ export type Event = {
     date: string,
     dayName?: string,
     type: string,
+    typeColor: string,
     image: ImageSourcePropType | undefined,
     participants: string[],
 };
