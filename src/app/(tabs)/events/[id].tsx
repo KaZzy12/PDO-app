@@ -56,7 +56,7 @@ const EventDetailsScreen = () => {
             <Text style={styles.date}>Date : {event.date}</Text>         
             {(participants.length > 0 || event.type != 'anniversaire') && (
               <>
-                <Text style={styles.text}>Participants :</Text>
+                <Text style={styles.text}>Participants ({participants?.length}) :</Text>
                 <FlatList
                     data={participants}
                     renderItem={({ item }) => <Text style={styles.list}>{`\u2022 ${item.profiles.full_name}`}</Text>}
@@ -67,7 +67,7 @@ const EventDetailsScreen = () => {
                     <Button onPress={() => {removeFromParticipants(profile)}} title="Je participe plus" disabled={!isParticipating}/>
                 </View>             
               </>             
-            )}           
+            )}
         </View>
     );
 };

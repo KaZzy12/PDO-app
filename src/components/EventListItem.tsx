@@ -68,11 +68,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   date: {
-    color: "white",
-		fontSize: 18,
+    color: "black",
+		fontSize: 17,
   },
   dayName: {
-    color: "white",
+    color: "black",
 		fontSize: 14,
   },
   image: {
