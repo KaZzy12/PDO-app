@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import AuthProvider from '../providers/AuthProvider';
 import QueryProvider from '../providers/QueryProvider';
 import { useColorScheme } from '@/src/components/useColorScheme';
+import LogoTitle from '../components/LogoTitle';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -53,7 +54,7 @@ function RootLayoutNav() {
       <AuthProvider>
         <QueryProvider>
           <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }}/>
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           </Stack>
         </QueryProvider>

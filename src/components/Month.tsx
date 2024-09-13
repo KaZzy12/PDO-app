@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
     month: {
       fontSize: 20,
       fontWeight: "300",
-      color: "#050315",
       marginBottom: 5,
     }
   });
